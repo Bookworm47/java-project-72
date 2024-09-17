@@ -1,22 +1,25 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     application
-    jacoco
-    id("java")
-    id ("checkstyle")
-    id("io.freefair.lombok") version "8.6"
-    id("com.github.ben-manes.versions") version "0.50.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.freefair.lombok") version "8.6"
+    checkstyle
+    id("com.adarshr.test-logger") version "3.2.0"
+    id("com.github.ben-manes.versions") version "0.47.0"
+    jacoco
 }
 
 group = "hexlet.code"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 application {
     mainClass.set("hexlet.code.App")
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -47,8 +50,23 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 }
 
+testlogger {
+    showStandardStreams = true
+}
+
+
+checkstyle {
+    toolVersion = "10.12.1"
+}
+
 tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
     useJUnitPlatform()
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+        showStandardStreams = true
+    }
 }
 
 tasks.jacocoTestReport { reports { xml.required.set(true) } }
