@@ -67,8 +67,8 @@ public class App {
         if (dataBaseUrl == null || dataBaseUrl.equals("JDBC_DATABASE_URL")) {
             hikariConfig.setJdbcUrl(dataBaseUrl);
         } else {
-            hikariConfig.setUsername(System.getenv("JDBC_DATABASE_USERNAME"));
-            hikariConfig.setPassword(System.getenv("JDBC_DATABASE_PASSWORD"));
+            hikariConfig.setUsername(System.getenv("USERNAME"));
+            hikariConfig.setPassword(System.getenv("PASSWORD"));
             hikariConfig.setJdbcUrl(dataBaseUrl);
         }
 
