@@ -6,7 +6,7 @@ import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.DirectoryCodeResolver;
 import gg.jte.resolve.ResourceCodeResolver;
-import hexlet.code.dto.MainPage;
+import hexlet.code.dto.BasePage;
 import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
@@ -67,10 +67,12 @@ public class App {
         if (dataBaseUrl == null || dataBaseUrl.equals("JDBC_DATABASE_URL")) {
             hikariConfig.setJdbcUrl(dataBaseUrl);
         } else {
-            hikariConfig.setUsername(System.getenv("USERNAME"));
-            hikariConfig.setPassword(System.getenv("PASSWORD"));
+            hikariConfig.setUsername(System.getenv("JDBC_DATABASE_USERNAME"));
+            hikariConfig.setPassword(System.getenv("JDBC_DATABASE_PASSWORD"));
             hikariConfig.setJdbcUrl(dataBaseUrl);
         }
+
+        //jdbc:postgresql://${HOST}:${DB_PORT}/${DATABASE}?password=${PASSWORD}&user=${USERNAME}
 
         var dataSource = new HikariDataSource(hikariConfig);
 
@@ -99,7 +101,7 @@ public class App {
 
         app.get("/", ctx -> {
             var helloString = "Hello World!";
-            var page = new MainPage(helloString);
+            var page = new BasePage(helloString);
             ctx.render("index.jte", Collections.singletonMap("page", page));
         });
 

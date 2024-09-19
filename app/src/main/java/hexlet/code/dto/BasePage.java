@@ -9,6 +9,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MainPage {
+public class BasePage {
+    private String flash;
+    private String flashType;
     private String helloString;
+
+    public BasePage(String helloString) {
+        this.helloString = helloString;
+    }
 }
