@@ -6,8 +6,10 @@ import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.DirectoryCodeResolver;
 import gg.jte.resolve.ResourceCodeResolver;
-import hexlet.code.dto.BasePage;
+import hexlet.code.controller.RootController;
+import hexlet.code.controller.UrlsController;
 import hexlet.code.repository.BaseRepository;
+import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -92,21 +93,18 @@ public class App {
 
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
-            config.fileRenderer(new JavalinJte(templateEngine));
+            config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
+
+        app.get(NamedRoutes.rootPath(), RootController::index);
+        app.get(NamedRoutes.urlsPath(), UrlsController::index);
+        app.get(NamedRoutes.urlPath("{id}"), UrlsController::show);
+        app.post(NamedRoutes.urlsPath(), UrlsController::create);
+
 
         app.before(ctx -> {
             ctx.contentType("text/html; charset=utf-8");
         });
-
-        app.get("/", ctx -> {
-            var helloString = "Hello World!";
-            var page = new BasePage(helloString);
-            ctx.render("index.jte", Collections.singletonMap("page", page));
-        });
-
-
-
 
 
         return app;
