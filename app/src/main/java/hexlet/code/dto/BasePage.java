@@ -12,9 +12,4 @@ import lombok.Setter;
 public class BasePage {
     private String flash;
     private String flashType;
-    private String helloString;
-
-    public BasePage(String helloString) {
-        this.helloString = helloString;
-    }
 }

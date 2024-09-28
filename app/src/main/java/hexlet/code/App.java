@@ -4,9 +4,9 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
-import gg.jte.resolve.DirectoryCodeResolver;
 import gg.jte.resolve.ResourceCodeResolver;
 import hexlet.code.controller.RootController;
+import hexlet.code.controller.UrlChecksController;
 import hexlet.code.controller.UrlsController;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.util.NamedRoutes;
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
@@ -40,7 +39,6 @@ public class App {
 
     public static void main(String[] args) throws IOException, SQLException {
         var app = getApp();
-
         app.start(getPort());
     }
 
@@ -73,7 +71,6 @@ public class App {
             hikariConfig.setJdbcUrl(dataBaseUrl);
         }
 
-        //jdbc:postgresql://${HOST}:${DB_PORT}/${DATABASE}?password=${PASSWORD}&user=${USERNAME}
 
         var dataSource = new HikariDataSource(hikariConfig);
 
@@ -86,11 +83,6 @@ public class App {
 
         BaseRepository.dataSource = dataSource;
 
-        Path templateRoot = Path.of("src/main/resources/templates");
-        TemplateEngine templateEngine = TemplateEngine.create(new DirectoryCodeResolver(templateRoot),
-                ContentType.Html);
-
-
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
@@ -100,6 +92,7 @@ public class App {
         app.get(NamedRoutes.urlsPath(), UrlsController::index);
         app.get(NamedRoutes.urlPath("{id}"), UrlsController::show);
         app.post(NamedRoutes.urlsPath(), UrlsController::create);
+        app.post(NamedRoutes.checksPath("{id}"), UrlChecksController::addCheck);
 
 
         app.before(ctx -> {
@@ -109,7 +102,5 @@ public class App {
 
         return app;
     }
-
-
 
 }
