@@ -1,3 +1,7 @@
+Анализатор страниц
+Веб-сайт - проект, предназначенный для анализа определенных страниц на предмет их SEO-соответствия. Он позволяет проверить доступность страницы, получив ее код ответа, а также проверить наличие заголовка страницы, описания и заголовка H1. Информация о введенных URL-адресах и результатах этих проверок хранится в базе данных.
+
+
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Bookworm47/java-project-72/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Bookworm47/java-project-72/actions)
 
